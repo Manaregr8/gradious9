@@ -1,52 +1,54 @@
-import React, { useState } from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
+// src/App.jsx
+import React, { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { addAppointment, updateAppointment, deleteAppointment } from './appointmentsSlice';
 
 const App = () => {
-  const [appointments, setAppointments] = useState([]);
+      console.log(useSelector((state) => state));
+  const appointments = useSelector((state) => state.appointments);
+  const dispatch = useDispatch();
+
   const [form, setForm] = useState({
-    name: "",
-    email: "",
-    age: "",
-    phone: "",
-    doctor: "",
-    date: "",
-    time: "",
-    message: "",
-    appointmentType: "Consult",
+    name: '',
+    email: '',
+    age: '',
+    phone: '',
+    doctor: '',
+    date: '',
+    time: '',
+    message: '',
+    appointmentType: 'Consult',
   });
 
   const [editingIndex, setEditingIndex] = useState(-1);
 
   const handleChange = (e) => {
+
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
+
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
     if (editingIndex === -1) {
-      // Add new appointment
-      setAppointments((prev) => [...prev, form]);
+      dispatch(addAppointment(form));
     } else {
-      // Update appointment
-      const updated = [...appointments];
-      updated[editingIndex] = form;
-      setAppointments(updated);
+      dispatch(updateAppointment({ index: editingIndex, appointment: form }));
       setEditingIndex(-1);
     }
 
-    // Reset form
     setForm({
-      name: "",
-      email: "",
-      age: "",
-      phone: "",
-      doctor: "",
-      date: "",
-      time: "",
-      message: "",
-      appointmentType: "Consult",
+      name: '',
+      email: '',
+      age: '',
+      phone: '',
+      doctor: '',
+      date: '',
+      time: '',
+      message: '',
+      appointmentType: 'Consult',
     });
   };
 
@@ -56,19 +58,18 @@ const App = () => {
   };
 
   const handleDelete = (index) => {
-    const updated = appointments.filter((_, i) => i !== index);
-    setAppointments(updated);
+    dispatch(deleteAppointment(index));
     if (index === editingIndex) {
       setForm({
-        name: "",
-        email: "",
-        age: "",
-        phone: "",
-        doctor: "",
-        date: "",
-        time: "",
-        message: "",
-        appointmentType: "Consult",
+        name: '',
+        email: '',
+        age: '',
+        phone: '',
+        doctor: '',
+        date: '',
+        time: '',
+        message: '',
+        appointmentType: 'Consult',
       });
       setEditingIndex(-1);
     }
@@ -187,7 +188,7 @@ const App = () => {
         </div>
 
         <button type="submit" className="btn btn-primary w-100">
-          {editingIndex === -1 ? "Book Appointment" : "Update Appointment"}
+          {editingIndex === -1 ? 'Book Appointment' : 'Update Appointment'}
         </button>
       </form>
 
